@@ -1,0 +1,53 @@
+# Composer (library)
+/vendor/
+/composer.lock
+/composer.phar
+
+# PHPUnit
+/.phpunit.result.cache
+/.phpunit.cache/
+/phpunit.xml
+/coverage/
+
+# Static analysis caches
+/phpstan.cache/
+/.psalm-cache/
+
+# IDE/editor
+/.idea/
+/.vscode/
+/.fleet/
+*.sublime-project
+*.sublime-workspace
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs and temp
+*.log
+/cache/
+/tmp/
+/build/
+/dist/
+
+# Environment
+/.env
+/.env.*
+
+# Node (if present)
+/node_modules/
+/package-lock.json
+/yarn.lock
+/pnpm-lock.yaml
+/npm-debug.log*
+/yarn-error.log
+/pnpm-debug.log*
+
+# Code style/tooling caches
+/.php-cs-fixer.cache
+/.php-cs.cache
+
+# Coverage tooling (JS)
+/.nyc_output/
+
