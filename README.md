@@ -1,4 +1,4 @@
-## Lampminds Customization for Laravel (Filament 3)
+## Lampminds Customization for Laravel (Filament 4)
 
 Small utility package with configuration and helpers to streamline customization in Laravel + Filament projects.
 
@@ -11,7 +11,7 @@ Small utility package with configuration and helpers to streamline customization
 ## Requirements
 - **PHP**: ^8.1
 - **Laravel**: ^10.0 | ^11.0 | ^12.0
-- **Filament**: ^3.0
+- **Filament**: ^4.0
 - **Spatie**: `spatie/laravel-medialibrary` ^11.13, `spatie/laravel-permission` ^6.20
 
 ## Installation
