@@ -1,12 +1,12 @@
 {
     "version": "1.0.0",
-    "name": "lampminds/customization",
+    "name": "lampminds/customization4",
     "description": "Filament-based customization components for Laravel projects",
     "type": "library",
     "license": "MIT",
     "autoload": {
         "psr-4": {
-            "Lampminds\\Customization\\": "src/"
+            "Lampminds\\Customization4\\": "src/"
         },
         "files": [
             "src/Filament/LmpCustomization/Helpers/helpers-common.php",
