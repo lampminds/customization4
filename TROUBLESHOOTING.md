@@ -177,7 +177,7 @@ If you're still experiencing problems:
    - `spatie/laravel-permission`
    - `spatie/laravel-medialibrary`
 4. **Clear everything**: Run all clear commands and restart your development server
-5. **Check Laravel version**: Ensure you're using Laravel 10+ and PHP 8.1+
+5. **Check Laravel version**: Ensure you're using Laravel 11+ and PHP 8.2+
 
 ## Getting Help
 

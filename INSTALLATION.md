@@ -1,4 +1,4 @@
-# LMP Customization Package Installation
+# LMP Customization Package Installation (Filament 4.x)
 
 ## Quick Start
 
