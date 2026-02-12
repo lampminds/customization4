@@ -30,7 +30,5 @@
                 "Lampminds\\Customization\\CustomizationServiceProvider"
             ]
         }
-    },
-    "minimum-stability": "dev",
-    "prefer-stable": true
+    }
 }
