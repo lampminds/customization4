@@ -2,7 +2,6 @@
 
 namespace Lampminds\Customization\Filament\LmpCustomization\Resources;
 
-use Asmit\ResizedColumn\HasResizableColumn;
 use Lampminds\Customization\Filament\LmpCustomization\Traits\HasFilteredRecordCount;
 use Filament\Actions;
 use Filament\Resources\Pages\ListRecords;

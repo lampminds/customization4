@@ -1,4 +1,4 @@
-# Lampminds Customization for Laravel (Filament 4)
+# Lampminds Customization for Laravel (Filament 4 & 5)
 
 A comprehensive utility package with Filament resources, configuration helpers, and customization components to streamline Laravel + Filament projects.
 
@@ -26,8 +26,12 @@ A comprehensive utility package with Filament resources, configuration helpers, 
 
 - **PHP**: ^8.2
 - **Laravel**: ^11.0 | ^12.0
-- **Filament**: ^4.0
+- **Filament**: ^4.0 | ^5.0
 - **Spatie**: `spatie/laravel-medialibrary` ^11.13, `spatie/laravel-permission` ^6.20
+
+### Filament 4 & 5 compatibility
+
+This package supports **Filament 4.x and 5.x**. The same codebase is used for both; resources, pages, form and table APIs used here are compatible with both versions. Filament 5 runs on Livewire 4 and may require Tailwind CSS 4 in your app—see the [Filament 5 upgrade guide](https://filamentphp.com/docs/5.x/upgrade-guide). The Spatie Media Library plugin is required as `^4.0|^5.0`; use the version that matches your Filament major version.
 
 ## 🚀 Quick Start
 
