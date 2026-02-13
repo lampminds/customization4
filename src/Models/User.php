@@ -16,7 +16,7 @@ class User extends Authenticatable
      *
      * @return list<string>
      */
-    public static function getFillableAttribute(): array
+    public static function getFillableAttributes(): array
     {
         return [
             'name',
@@ -34,7 +34,7 @@ class User extends Authenticatable
      *
      * @return list<string>
      */
-    public static function getHiddenAttribute(): array
+    public static function getHiddenAttributes(): array
     {
         return ['password', 'remember_token'];
     }
