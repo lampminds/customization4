@@ -35,43 +35,57 @@ This package supports **Filament 4.x and 5.x**. The same codebase is used for bo
 
 ## 🚀 Quick Start
 
-### 1. Install the Package
+Package features (Users, Parameters) **only appear after** you install, publish assets, run migrations, **and register the resources** in your Filament panel. See [INSTALLATION.md](INSTALLATION.md) if you don’t see them.
+
+### 1. Install the package
 ```bash
 composer require lampminds/customization
 ```
 
-### 2. Run Migrations
+### 2. Publish assets and run migrations
 ```bash
-php artisan vendor:publish --tag="lmpcustomization-migrations"
+# Publish config + migrations (and views if present)
+php artisan vendor:publish --tag="lmpcustomization"
 php artisan migrate
 ```
 
-### 3. Publish Configuration (Recommended)
-```bash
-php artisan vendor:publish --tag="lmpcustomization-config"
-```
+### 3. Register resources in your Filament panel (required)
 
-### 4. Register Resources in Your Filament Panel
-
-Add the resources to your `AdminPanelProvider`:
+In `app/Providers/Filament/AdminPanelProvider.php` (or your panel provider), add the package resources:
 
 ```php
-// In app/Providers/Filament/AdminPanelProvider.php
-use Lampminds\Customization\Resources\ParameterResource;
-use Lampminds\Customization\Resources\UserResource;
+use Lampminds\Customization\Customization;
 
 public function panel(Panel $panel): Panel
 {
     return $panel
         // ... your existing configuration
-        ->resources([
-            ParameterResource::class,
-            UserResource::class,
-        ]);
+        ->resources(Customization::resources())
+        // ...
 }
 ```
 
-**That's it!** Your Filament resources will now appear in the admin panel.
+Or register them explicitly:
+
+```php
+use Lampminds\Customization\Resources\ParameterResource;
+use Lampminds\Customization\Resources\UserResource;
+
+->resources([ParameterResource::class, UserResource::class])
+```
+
+**That’s it.** Parameters and User Management will appear in your admin sidebar.
+
+### Publishing options
+
+| Command | What it publishes |
+|--------|-------------------|
+| `php artisan vendor:publish --tag="lmpcustomization"` | Config + migrations + views |
+| `--tag="lmpcustomization-config"` | Config only |
+| `--tag="lmpcustomization-migrations"` | Migrations only |
+| `--tag="lmpcustomization-views"` | Views only |
+
+Models and resources are **not** published; they are used from the package. To customize, extend the resources or set `user_model` / `parameter_model` in config.
 
 ## ⚙️ Configuration
 

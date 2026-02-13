@@ -23,12 +23,22 @@ class CustomizationServiceProvider extends PackageServiceProvider
     {
         parent::boot();
 
+        // Publish all package assets with a single tag (config + migrations + views)
+        $publishArray = [
+            __DIR__ . '/config/lmpcustomization.php' => config_path('lmpcustomization.php'),
+            __DIR__ . '/database/migrations' => database_path('migrations'),
+        ];
+        if (is_dir(__DIR__ . '/resources/views')) {
+            $publishArray[__DIR__ . '/resources/views'] = resource_path('views/vendor/lmpcustomization');
+        }
+        $this->publishes($publishArray, 'lmpcustomization');
+
         // Register Filament resources if enabled in config
         $this->registerFilamentResources();
-        
+
         // Register model bindings
         $this->registerModelBindings();
-        
+
         // Register gates and policies
         $this->registerGates();
     }

@@ -1,102 +1,106 @@
-# LMP Customization Package Installation (Filament 4.x)
+# LMP Customization Package Installation (Filament 4 & 5)
+
+## I don't see the package features (Users, Parameters in the sidebar)
+
+You will **not** see any package features until you do **all** of the following:
+
+1. **Install the package**: `composer require lampminds/customization`
+2. **Publish assets** (config and/or migrations — see "Publishing package assets" below)
+3. **Run migrations**: `php artisan migrate`
+4. **Register the resources** in your Filament panel (see step 4 below). **This is required** — the package does not auto-register resources.
+
+If you skip step 4, the Users and Parameters menu items will not appear.
+
+---
 
 ## Quick Start
 
-The package provides Filament resources that need to be manually registered in your panel provider.
+### 1. Install the package
 
-## Installation Steps
-
-1. **Install the package**:
 ```bash
 composer require lampminds/customization
 ```
 
-2. **Publish and run migrations**:
+### 2. Publish package assets and run migrations
+
+**Option A — Publish everything in one go (recommended):**
+
 ```bash
-php artisan vendor:publish --tag="lmpcustomization-migrations"
+php artisan vendor:publish --tag="lmpcustomization"
 php artisan migrate
 ```
 
-3. **Publish config file** (recommended for customization):
+**Option B — Publish only what you need:**
+
 ```bash
+# Config (for enable/disable resources, navigation, etc.)
 php artisan vendor:publish --tag="lmpcustomization-config"
+
+# Migrations (required for Parameters and extended Users table)
+php artisan vendor:publish --tag="lmpcustomization-migrations"
+php artisan migrate
+
+# Views (optional, if the package ships views)
+php artisan vendor:publish --tag="lmpcustomization-views"
 ```
 
-4. **Register resources in your Filament Panel**:
+### 3. Publish tags reference
 
-In your `app/Providers/Filament/AdminPanelProvider.php` (or your main panel provider), add the resources:
+| Tag | What it publishes |
+|-----|-------------------|
+| `lmpcustomization` | Config + migrations + views (one command for all) |
+| `lmpcustomization-config` | `config/lmpcustomization.php` only |
+| `lmpcustomization-migrations` | Migration files to `database/migrations` |
+| `lmpcustomization-views` | Views to `resources/views/vendor/lmpcustomization` |
+
+**Note:** Models and Filament resources are **not** published — they live inside the package. You use them by registering the resources in your panel (step 4). To customize, extend the package resources or bind your own models in config.
+
+### 4. Register resources in your Filament panel (required)
+
+Open your panel provider (e.g. `app/Providers/Filament/AdminPanelProvider.php`) and add the package resources so they appear in the sidebar.
+
+**One-line registration (recommended):**
 
 ```php
-<?php
+use Lampminds\Customization\Customization;
 
-namespace App\Providers\Filament;
-
-use Filament\Http\Middleware\Authenticate;
-use Filament\Http\Middleware\DisableBladeIconComponents;
-use Filament\Http\Middleware\DispatchServingFilamentEvent;
-use Filament\Pages;
-use Filament\Panel;
-use Filament\PanelProvider;
-use Filament\Support\Colors\Color;
-use Filament\Widgets;
-use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
-use Illuminate\Cookie\Middleware\EncryptCookies;
-use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
-use Illuminate\Routing\Middleware\SubstituteBindings;
-use Illuminate\Session\Middleware\AuthenticateSession;
-use Illuminate\Session\Middleware\StartSession;
-use Illuminate\View\Middleware\ShareErrorsFromSession;
-
-// Import the LMP Customization resources
-use Lampminds\Customization\Resources\ParameterResource;
-use Lampminds\Customization\Resources\UserResource;
-
-class AdminPanelProvider extends PanelProvider
+public function panel(Panel $panel): Panel
 {
-    public function panel(Panel $panel): Panel
-    {
-        return $panel
-            ->default()
-            ->id('admin')
-            ->path('/admin')
-            ->login()
-            ->colors([
-                'primary' => Color::Amber,
-            ])
-            ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
-            ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')
-            ->pages([
-                Pages\Dashboard::class,
-            ])
-            ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\\Filament\\Widgets')
-            ->widgets([
-                Widgets\AccountWidget::class,
-                Widgets\FilamentInfoWidget::class,
-            ])
-            // Add LMP Customization resources here
-            ->resources([
-                ParameterResource::class,
-                UserResource::class, // Only if you want to use the custom User resource
-            ])
-            ->middleware([
-                EncryptCookies::class,
-                AddQueuedCookiesToResponse::class,
-                StartSession::class,
-                AuthenticateSession::class,
-                ShareErrorsFromSession::class,
-                VerifyCsrfToken::class,
-                SubstituteBindings::class,
-                DisableBladeIconComponents::class,
-                DispatchServingFilamentEvent::class,
-            ])
-            ->authMiddleware([
-                Authenticate::class,
-            ]);
-    }
+    return $panel
+        // ... your existing configuration (id, path, login, etc.)
+        ->resources(Customization::resources())   // Adds Parameters + Users (respects config)
+        // ... rest of your configuration
 }
 ```
 
-That's it! The resources will now appear in your Filament admin panel.
+**Or register each resource explicitly:**
+
+```php
+use Lampminds\Customization\Resources\ParameterResource;
+use Lampminds\Customization\Resources\UserResource;
+
+public function panel(Panel $panel): Panel
+{
+    return $panel
+        // ... your existing configuration
+        ->resources([
+            ParameterResource::class,
+            UserResource::class,
+        ])
+        // ...
+}
+```
+
+If you use `->discoverResources(...)` for your app resources, merge the package resources:
+
+```php
+->resources(array_merge(
+    \Lampminds\Customization\Customization::resources(),
+    // ... or list your app resources here
+))
+```
+
+That's it. After step 4, **Parameters** and **User Management** (Users) should appear in your Filament admin sidebar.
 
 ## Configuration
 
@@ -142,12 +146,12 @@ LMP_PARAMETER_NAVIGATION_GROUP="Settings"
 
 ### Using Your Own Models
 
-If you want to use your own User or Parameter models:
+If you want to use your own User or Parameter models (they must implement the same interface/attributes as the package models):
 
 ```php
 // In config/lmpcustomization.php
-'user_model' => \Lampminds\Customization\Models\User::class,
-'parameter_model' => \Lampminds\Customization\Models\Parameter::class,
+'user_model' => \App\Models\User::class,
+'parameter_model' => \App\Models\Parameter::class,
 ```
 
 Or via environment variables:
@@ -184,31 +188,16 @@ Then configure:
 'user_resource' => \App\Filament\Resources\CustomUserResource::class,
 ```
 
-### Manual Registration (Alternative)
+### Disabling a resource via config
 
-If you prefer manual control, you can disable auto-registration and register manually:
+To hide one of the package resources from the list, set in `config/lmpcustomization.php`:
 
 ```php
-// In config/lmpcustomization.php
-'enable_user_resource' => false,
-'enable_parameter_resource' => false,
+'enable_user_resource' => false,   // hide User resource
+'enable_parameter_resource' => false,  // hide Parameter resource
 ```
 
-Then in your `AdminPanelProvider`:
-```php
-use Lampminds\Customization\Resources\ParameterResource;
-use Lampminds\Customization\Resources\UserResource;
-
-public function panel(Panel $panel): Panel
-{
-    return $panel
-        // ... other configuration
-        ->resources([
-            ParameterResource::class,
-            UserResource::class,
-        ]);
-}
-```
+Then use `Customization::resources()` in your panel so the list respects this config. If you register the resources manually (listing the classes), they will show regardless of config.
 
 ## Available Resources
 
@@ -237,12 +226,12 @@ The package provides custom Filament form and table components:
 
 ## Troubleshooting
 
-### Resources Not Showing Up
+### I don’t see Users or Parameters in the Filament sidebar
 
-1. Check that the package is properly installed: `composer show lampminds/customization`
-2. Verify the service provider is registered in `composer.json`
-3. Check the configuration in `config/lmpcustomization.php`
-4. Clear config cache: `php artisan config:clear`
+1. **Did you register the resources?** You must add `->resources(Customization::resources())` (or list `ParameterResource::class`, `UserResource::class`) in your Filament panel provider. Without this, the package resources never appear.
+2. Check that the package is installed: `composer show lampminds/customization`
+3. Publish config and migrations: `php artisan vendor:publish --tag="lmpcustomization"` then `php artisan migrate`
+4. If you use `Customization::resources()`, ensure `config/lmpcustomization.php` has `enable_user_resource` and `enable_parameter_resource` set to `true` (or omit the config so defaults apply). Clear config cache: `php artisan config:clear`
 
 ### Model Conflicts
 
