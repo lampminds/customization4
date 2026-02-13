@@ -15,7 +15,7 @@ use Lampminds\Customization\Filament\LmpCustomization\TableComponents\LmpTableUp
 use Lampminds\Customization\Traits\CustomizableResource;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Tabs;
-use Filament\Forms\Form;
+use Filament\Schemas\Schema;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
@@ -40,13 +40,13 @@ class UserResource extends LmpResource
 
     protected static ?string $model = User::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-users';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-users';
 
-    protected static ?string $navigationGroup = 'User Management';
+    protected static string | \UnitEnum | null $navigationGroup = 'User Management';
 
     protected static ?int $navigationSort = 1;
 
-    public static function getMainFormSchema(Form $form): array
+    public static function getMainFormSchema(Schema $schema): array
     {
         return [
             Tabs::make('User Information')

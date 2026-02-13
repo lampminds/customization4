@@ -4,9 +4,9 @@ namespace Lampminds\Customization\Filament\LmpCustomization\Resources;
 
 use Lampminds\Customization\Filament\LmpCustomization\FormComponents\LmpFormCreatedByStamp;
 use Lampminds\Customization\Filament\LmpCustomization\FormComponents\LmpFormUpdatedByStamp;
-use Filament\Forms\Components\Section;
-use Filament\Forms\Form;
 use Filament\Resources\Resource;
+use Filament\Schemas\Schema;
+use Filament\Schemas\Components\Section;
 use Filament\Tables;
 use Filament\Tables\Actions\ActionGroup;
 use Filament\Tables\Actions\DeleteAction;
@@ -22,21 +22,21 @@ use Illuminate\Support\Facades\Gate;
  */
 abstract class LmpResource extends Resource
 {
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
         // if the model has a property $dont_use_audit, then don't show the audit info
         if (!property_exists(static::getModel(), 'dont_use_audit')) {
-            return $form->schema(array_merge(
-                static::getMainFormSchema($form),
+            return $schema->schema(array_merge(
+                static::getMainFormSchema($schema),
                 static::getAuditFooterSchema()
             ));
         } else {
-            return $form->schema(static::getMainFormSchema($form));
+            return $schema->schema(static::getMainFormSchema($schema));
         }
     }
 
     // Your resource must define this
-    abstract protected static function getMainFormSchema(Form $form): array;
+    abstract protected static function getMainFormSchema(Schema $schema): array;
 
     protected static function getAuditFooterSchema(): array
     {

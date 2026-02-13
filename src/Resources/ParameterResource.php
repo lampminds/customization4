@@ -11,8 +11,8 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\TimePicker;
-use Filament\Forms\Form;
 use Filament\Forms\Get;
+use Filament\Schemas\Schema;
 use Filament\Tables;
 use Filament\Tables\Actions\ActionGroup;
 use Filament\Tables\Columns\TextColumn;
@@ -40,7 +40,7 @@ class ParameterResource extends LmpResource
 
     protected static ?string $model = Parameter::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-adjustments-horizontal';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-adjustments-horizontal';
 
     public static function getNavigationGroup(): string
     {
@@ -72,7 +72,7 @@ class ParameterResource extends LmpResource
 //            });
 //    }
 
-    public static function getMainFormSchema(Form $form): array
+    public static function getMainFormSchema(Schema $schema): array
     {
         return [Section::make('')
             ->schema([

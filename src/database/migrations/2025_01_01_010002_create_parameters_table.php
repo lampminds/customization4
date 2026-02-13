@@ -16,13 +16,13 @@ return new class extends Migration
     {
         Schema::create('parameters', function (Blueprint $table) {
             $table->id();
-            $table->string('category', 50);
-            $table->string('code', 200);
+            $table->string('category', 50)->comment('Allows to group parameters');
+            $table->string('code', 200)->unique();
             $table->unsignedTinyInteger('type_id')->default(0);
-            $table->text('value')->nullable();
+            $table->text('value')->nullable()->comment('Contents vary according to the type');
             $table->unsignedTinyInteger('mode_id')->default(0);
-            $table->text('help')->nullable();
-            $table->text('comments')->nullable();
+            $table->text('help')->nullable()->comment('Help text visible to users');
+            $table->text('comments')->nullable()->comment('Internal comments');
             lmpStamps($table);
         });
     }
