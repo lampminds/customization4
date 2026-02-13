@@ -12,29 +12,32 @@ class User extends Authenticatable
     use Notifiable, HasRoles;
 
     /**
-     * The attributes that are mass assignable.
+     * Return the fillable attributes so child classes can merge their own.
      *
-     * @var list<string>
+     * @return list<string>
      */
-    protected $fillable = [
-        'name',
-        'email',
-        'kicked_out',
-        'last_login_at',
-        'last_login_ip',
-        'last_seen_at',
-        'email_verified_at',
-    ];
+    public static function getFillable(): array
+    {
+        return [
+            'name',
+            'email',
+            'kicked_out',
+            'last_login_at',
+            'last_login_ip',
+            'last_seen_at',
+            'email_verified_at',
+        ];
+    }
 
     /**
-     * The attributes that should be hidden for serialization.
+     * Return the hidden attributes so child classes can merge their own.
      *
-     * @var list<string>
+     * @return list<string>
      */
-    protected $hidden = [
-        'password',
-        'remember_token',
-    ];
+    public static function getHidden(): array
+    {
+        return ['password', 'remember_token'];
+    }
 
     /**
      * Get the attributes that should be cast.
@@ -53,11 +56,11 @@ class User extends Authenticatable
     }
 
     /**
-     * Get the user's initials
+     * Get the user's initials (static for extension in child classes).
      */
-    public function initials(): string
+    public static function getInitials(self $user): string
     {
-        return Str::of($this->name)
+        return Str::of($user->name)
             ->explode(' ')
             ->take(2)
             ->map(fn ($word) => Str::substr($word, 0, 1))
@@ -65,26 +68,58 @@ class User extends Authenticatable
     }
 
     /**
-     * Check if user is admin
+     * Get the user's initials (instance method delegates to static).
+     */
+    public function initials(): string
+    {
+        return static::getInitials($this);
+    }
+
+    /**
+     * Check if user is admin (static for extension in child classes).
+     */
+    public static function checkIsAdmin(self $user): bool
+    {
+        return $user->hasRole('admin');
+    }
+
+    /**
+     * Check if user is admin (instance method delegates to static).
      */
     public function isAdmin(): bool
     {
-        return $this->hasRole('admin');
+        return static::checkIsAdmin($this);
     }
 
     /**
-     * Check if user can manage parameters
+     * Check if user can manage parameters (static for extension in child classes).
+     */
+    public static function checkCanManageParameters(self $user): bool
+    {
+        return $user->hasAnyRole(['admin', 'account_owner']);
+    }
+
+    /**
+     * Check if user can manage parameters (instance method delegates to static).
      */
     public function canManageParameters(): bool
     {
-        return $this->hasAnyRole(['admin', 'account_owner']);
+        return static::checkCanManageParameters($this);
     }
 
     /**
-     * Check if user can manage pages
+     * Check if user can manage pages (static for extension in child classes).
+     */
+    public static function checkCanManagePages(self $user): bool
+    {
+        return $user->hasAnyRole(['admin', 'account_owner']);
+    }
+
+    /**
+     * Check if user can manage pages (instance method delegates to static).
      */
     public function canManagePages(): bool
     {
-        return $this->hasAnyRole(['admin', 'account_owner']);
+        return static::checkCanManagePages($this);
     }
 }

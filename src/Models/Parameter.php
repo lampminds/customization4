@@ -58,25 +58,41 @@ class Parameter extends BaseModel implements HasMedia
         'internal',
     ];
 
-    public function registerMediaConversions(Media $media = null): void
+    /**
+     * Register media conversions (static for extension in child classes).
+     * Instance method delegates here so you can override in a child model.
+     */
+    public static function registerMediaConversionsStatic(self $parameter): void
     {
-        $this->addMediaConversion('thumb')
+        $parameter->addMediaConversion('thumb')
             ->fit(Manipulations::FIT_CONTAIN, 100, 100)
             ->nonQueued();
 
-        $this->addMediaConversion('parameters')
+        $parameter->addMediaConversion('parameters')
             ->fit(Manipulations::FIT_CONTAIN, 600, 600)
             ->nonQueued();
 
-        $this
-            ->addMediaConversion('preview')
+        $parameter->addMediaConversion('preview')
             ->fit(Manipulations::FIT_CONTAIN, 300, 300)
             ->nonQueued();
     }
 
+    public function registerMediaConversions(Media $media = null): void
+    {
+        static::registerMediaConversionsStatic($this);
+    }
+
+    /**
+     * Register media collections (static for extension in child classes).
+     */
+    public static function registerMediaCollectionsStatic(self $parameter): void
+    {
+        $parameter->addMediaCollection('parameters');
+    }
+
     public function registerMediaCollections(): void
     {
-        $this->addMediaCollection('parameters');
+        static::registerMediaCollectionsStatic($this);
     }
 
     /**
@@ -102,27 +118,49 @@ class Parameter extends BaseModel implements HasMedia
     }
 
     /**
-     * get type
+     * Get type name by type_id (static for extension in child classes).
+     *
+     * @param int|null $typeId
+     * @return string
      */
-    public function getTypeAttribute()
+    public static function getTypeName(?int $typeId): string
     {
-        if (isset($this->attributes['type_id'])) {
-            return self::TYPES[ $this->attributes['type_id'] ];
-        } else {
-            return self::TYPES[0];
+        if ($typeId !== null && isset(static::TYPES[$typeId])) {
+            return static::TYPES[$typeId];
         }
+        return static::TYPES[0];
     }
 
     /**
-     * get mode
+     * Get mode name by mode_id (static for extension in child classes).
+     *
+     * @param int|null $modeId
+     * @return string
+     */
+    public static function getModeName(?int $modeId): string
+    {
+        if ($modeId !== null && isset(static::MODES[$modeId])) {
+            return static::MODES[$modeId];
+        }
+        return static::MODES[0];
+    }
+
+    /**
+     * get type (accessor delegates to static).
+     */
+    public function getTypeAttribute()
+    {
+        $typeId = $this->attributes['type_id'] ?? null;
+        return static::getTypeName($typeId !== null ? (int) $typeId : null);
+    }
+
+    /**
+     * get mode (accessor delegates to static).
      */
     public function getModeAttribute()
     {
-        if (isset($this->attributes['mode_id'])) {
-            return self::MODES[ $this->attributes['mode_id'] ];
-        } else {
-            return self::MODES[0];
-        }
+        $modeId = $this->attributes['mode_id'] ?? null;
+        return static::getModeName($modeId !== null ? (int) $modeId : null);
     }
 
     /**
@@ -130,7 +168,7 @@ class Parameter extends BaseModel implements HasMedia
      */
     public function setTypeAttribute($value)
     {
-        $this->attributes['type_id'] = self::getTypeID($value);
+        $this->attributes['type_id'] = static::getTypeID($value);
     }
 
     /**
@@ -138,6 +176,6 @@ class Parameter extends BaseModel implements HasMedia
      */
     public function setModeAttribute($value)
     {
-        $this->attributes['mode_id'] = self::getModeID($value);
+        $this->attributes['mode_id'] = static::getModeID($value);
     }
 }
