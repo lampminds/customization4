@@ -28,8 +28,9 @@ use Filament\Forms\Components\Select;
 use Lampminds\Customization\Models\User;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
-use Filament\Tables\Actions\DeleteAction;
-use Filament\Tables\Actions\BulkAction;
+use Filament\Actions\ActionGroup;
+use Filament\Actions\EditAction;
+use Filament\Actions\ViewAction;
 use Filament\Notifications\Notification;
 use Illuminate\Database\Eloquent\Collection;
 use Filament\Support\Exceptions\Halt;
@@ -205,9 +206,9 @@ class UserResource extends LmpResource
                     }),
             ])
             ->actions([
-                Tables\Actions\ActionGroup::make([
-                    Tables\Actions\ViewAction::make(),
-                    Tables\Actions\EditAction::make(),
+                ActionGroup::make([
+                    ViewAction::make(),
+                    EditAction::make(),
                 ]),
             ])
             ->bulkActions([

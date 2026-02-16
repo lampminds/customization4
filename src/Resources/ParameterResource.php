@@ -14,7 +14,9 @@ use Filament\Forms\Components\TimePicker;
 use Filament\Forms\Get;
 use Filament\Schemas\Schema;
 use Filament\Tables;
-use Filament\Tables\Actions\ActionGroup;
+use Filament\Actions\ActionGroup;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
@@ -333,8 +335,8 @@ class ParameterResource extends LmpResource
                     }),
             ]))
             ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
                 ]),
             ]);
     }

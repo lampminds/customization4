@@ -2,7 +2,7 @@
 
 namespace Lampminds\Customization\Traits;
 
-use Filament\Tables\Actions\Action;
+use Filament\Actions\Action;
 use Illuminate\Database\Eloquent\Model;
 
 trait HasRecordCopy
