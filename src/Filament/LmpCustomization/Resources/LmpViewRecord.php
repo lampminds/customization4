@@ -1,12 +1,27 @@
 <?php
+
 namespace Lampminds\Customization\Filament\LmpCustomization\Resources;
 
-use Filament\Forms\Components\View;
+use Filament\Actions;
 use Filament\Resources\Pages\ViewRecord;
 
 class LmpViewRecord extends ViewRecord
 {
-    // redirects to index list after creating a new record
+    /**
+     * Default header actions for view page: Edit and Delete.
+     * Override getHeaderActions() in your page class to customize.
+     */
+    protected function getHeaderActions(): array
+    {
+        return [
+            Actions\EditAction::make(),
+            Actions\DeleteAction::make(),
+        ];
+    }
+
+    /**
+     * Redirects to index list after actions (edit, delete).
+     */
     protected function getRedirectUrl(): string
     {
         return static::getResource()::getUrl('index');

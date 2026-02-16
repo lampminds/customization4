@@ -1,11 +1,27 @@
 <?php
+
 namespace Lampminds\Customization\Filament\LmpCustomization\Resources;
 
+use Filament\Actions;
 use Filament\Resources\Pages\EditRecord;
 
 class LmpEditRecord extends EditRecord
 {
-    // redirects to index list after creating a new record
+    /**
+     * Default header actions for edit page: View and Delete.
+     * Override getHeaderActions() in your page class to customize.
+     */
+    protected function getHeaderActions(): array
+    {
+        return [
+            Actions\ViewAction::make(),
+            Actions\DeleteAction::make(),
+        ];
+    }
+
+    /**
+     * Redirects to index list after saving.
+     */
     public function afterSave()
     {
     }
