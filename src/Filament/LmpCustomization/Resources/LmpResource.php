@@ -12,7 +12,7 @@ use Filament\Tables\Actions\ActionGroup;
 use Filament\Tables\Actions\DeleteAction;
 use Filament\Tables\Actions\EditAction;
 use Filament\Tables\Actions\ViewAction;
-use Filament\Tables\Enums\ActionsPosition;
+use Filament\Tables\Enums\RecordActionsPosition;
 use Filament\Tables\Enums\FiltersLayout;
 use Illuminate\Support\Facades\Gate;
 
@@ -64,7 +64,7 @@ abstract class LmpResource extends Resource
     {
         return $table
             // action button always located before the columns
-            ->actionsPosition(position: ActionsPosition::BeforeColumns)
+            ->recordActionsPosition(RecordActionsPosition::BeforeColumns)
             // action button is the 3 dots icon: under it, see tableActions()
             ->actions(
                 ActionGroup::make(static::tableActions()))
