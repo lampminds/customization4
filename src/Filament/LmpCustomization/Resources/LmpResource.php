@@ -72,6 +72,8 @@ abstract class LmpResource extends Resource
                 ActionGroup::make(static::tableActions()))
             // filters do not change while logged in
             ->persistFiltersInSession()
+            // filters apply automatically on change (Filament 3.x behavior, no Apply button)
+            ->deferFilters(false)
             // filters are located above the table content
             ->filtersLayout(FiltersLayout::AboveContent)
             // default bulk actions - can be overridden
