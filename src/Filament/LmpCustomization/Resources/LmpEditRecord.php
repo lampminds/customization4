@@ -20,9 +20,9 @@ class LmpEditRecord extends EditRecord
     }
 
     /**
-     * Redirects to index list after saving.
+     * Empty hook - override in subclass to run logic after save.
      */
-    public function afterSave()
+    protected function afterSave(): void
     {
     }
 
