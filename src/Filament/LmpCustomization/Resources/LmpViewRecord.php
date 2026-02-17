@@ -22,7 +22,7 @@ class LmpViewRecord extends ViewRecord
     /**
      * Redirects to index list after actions (edit, delete).
      */
-    protected function getRedirectUrl(): string
+    protected function getRedirectUrl(): ?string
     {
         return static::getResource()::getUrl('index');
     }

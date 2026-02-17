@@ -26,7 +26,7 @@ class LmpEditRecord extends EditRecord
     {
     }
 
-    protected function getRedirectUrl(): string
+    protected function getRedirectUrl(): ?string
     {
         return static::getResource()::getUrl('index');
     }

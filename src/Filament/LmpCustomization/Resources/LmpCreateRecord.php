@@ -7,7 +7,7 @@ use Filament\Resources\Pages\CreateRecord;
 class LmpCreateRecord extends CreateRecord
 {
     // redirects to index list after creating a new record
-    protected function getRedirectUrl(): string
+    protected function getRedirectUrl(): ?string
     {
         return static::getResource()::getUrl('index');
     }
