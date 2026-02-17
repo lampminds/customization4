@@ -1,6 +1,7 @@
 <?php
 namespace Lampminds\Customization\Filament\LmpCustomization\TableComponents;
 
+use Filament\Support\Enums\TextSize;
 use Filament\Tables\Columns\TextColumn;
 use Illuminate\Support\HtmlString;
 use Illuminate\Support\Str;
@@ -18,7 +19,7 @@ class LmpTableTimeStamp
                         $record->$name->format('h:ia'))
                     : new HtmlString('N/A');
             })
-            ->size(TextColumn\TextColumnSize::ExtraSmall)
+            ->size(TextSize::ExtraSmall)
             ->alignment('center')
             ->sortable()
             ->searchable()

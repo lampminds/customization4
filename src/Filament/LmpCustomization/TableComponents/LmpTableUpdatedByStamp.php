@@ -2,6 +2,7 @@
 
 namespace Lampminds\Customization\Filament\LmpCustomization\TableComponents;
 
+use Filament\Support\Enums\TextSize;
 use Filament\Tables\Columns\TextColumn;
 use Illuminate\Support\HtmlString;
 
@@ -27,7 +28,7 @@ class LmpTableUpdatedByStamp
                     return new HtmlString('(N/A)<br>' . $user);
                 }
             })
-            ->size(TextColumn\TextColumnSize::ExtraSmall)
+            ->size(TextSize::ExtraSmall)
             ->icon('heroicon-o-shield-check')
             ->alignment('center')
             ->toggleable(isToggledHiddenByDefault: true);
