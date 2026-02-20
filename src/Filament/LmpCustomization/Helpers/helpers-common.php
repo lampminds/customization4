@@ -24,7 +24,7 @@ function nickname($user_id): string
         return $cache[$user_id];
     }
 
-    $userModel = config('lmpcustomization.user_model', \Lampminds\Customization\Models\User::class);
+    $userModel = config('lmpcustomization.user_model') ?: \Lampminds\Customization\Models\User::class;
     $user = $userModel::where('id', $user_id)->first();
 
     if (!$user) {
