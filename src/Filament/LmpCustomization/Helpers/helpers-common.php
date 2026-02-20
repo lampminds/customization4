@@ -20,29 +20,32 @@ function nickname($user_id): string
 {
     static $cache = [];
 
-    if (in_array($user_id, $cache)) {
-        $ret = $cache[$user_id];
-    } else {
-        if ($user = User::where('id', $user_id)->first()) {
-            $aux = explode(' ', $user->name);
-            switch (count($aux)) {
-                case 0:
-                    $ret = $user->name;
-                    break;
-                case 1:
-                    $ret = Str::ucfirst($aux[0]);
-                    break;
-                case 2:
-                    $ret = Str::ucfirst($aux[0]) . '-' . Str::ucfirst($aux[1][0]);
-                    break;
-                default:
-                    $ret = Str::ucfirst($aux[0]) . '-' . Str::ucfirst($aux[2][0]);
-            }
-            $cache[$user_id] = $ret;
-        } else {
-            $ret = 'n/a';
-        }
+    if (isset($cache[$user_id])) {  // FIX: isset en vez de in_array
+        return $cache[$user_id];
     }
+
+    $userModel = config('lmpcustomization.user_model', \Lampminds\Customization\Models\User::class);
+    $user = $userModel::where('id', $user_id)->first();
+
+    if (!$user) {
+        $cache[$user_id] = 'n/a';
+        return 'n/a';
+    }
+
+    $name = trim((string) ($user->name ?? ''));
+
+    if ($name === '') {
+        $ret = trim((string) ($user->email ?? '')) ?: "User #{$user_id}";
+    } else {
+        $aux = explode(' ', $name);
+        $ret = match (count($aux)) {
+            1 => Str::ucfirst($aux[0]),
+            2 => Str::ucfirst($aux[0]) . '-' . Str::ucfirst(mb_substr($aux[1], 0, 1)),
+            default => Str::ucfirst($aux[0]) . '-' . Str::ucfirst(mb_substr($aux[count($aux) - 1], 0, 1)),
+        };
+    }
+
+    $cache[$user_id] = $ret;
     return $ret;
 }
 
