@@ -210,13 +210,14 @@ function isRecentlyWorkedOn($updated_at): bool
 
 function lmpStamps(Blueprint $table) : void
 {
+    $random = Str::random(6);
     $table->foreignId('created_by')
         ->nullable()
-        ->constrained('users', 'id', 'user_cby_fk')
+        ->constrained('users', 'id', 'user_cby_fk_'.$random)
         ->onDelete('set null');
     $table->foreignId('updated_by')
         ->nullable()
-        ->constrained('users', 'id', 'user_uby_fk')
+        ->constrained('users', 'id', 'user_uby_fk_'.$random)
         ->onDelete('set null');
     $table->timestamp('created_at')->nullable();
     $table->timestamp('updated_at')->nullable();
